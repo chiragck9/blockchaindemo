@@ -15,7 +15,7 @@ android {
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BLOCKCHAIN_KEY", "\"d39720d4bf1957b2f9e05f7b890b0522441e1465\"")
+        buildConfigField("String", "BLOCKCHAIN_KEY", "\"API_KEY\"")
         multiDexEnabled true
 
     }
