@@ -1,0 +1,91 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+    compileSdkVersion rootProject.ext.androidCompileSdkVersion
+    buildToolsVersion rootProject.ext.androidBuildToolsVersion
+    defaultConfig {
+        applicationId "com.ckunder.blockchain"
+        minSdkVersion rootProject.ext.androidMinSdkVersion
+        targetSdkVersion rootProject.ext.androidTargetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BLOCKCHAIN_KEY", "\"d39720d4bf1957b2f9e05f7b890b0522441e1465\"")
+        multiDexEnabled true
+
+    }
+    dataBinding {
+        enabled = true
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+}
+kapt {
+    generateStubs = true
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    def appDependencies = rootProject.ext.appDependencies
+    def testDependencies = rootProject.ext.testDependencies
+
+    implementation appDependencies.kotlinStdLibJre
+    implementation appDependencies.supportLibrary
+    implementation appDependencies.designLibrary
+    compile appDependencies.recyclerView
+    implementation appDependencies.constraintLayout
+    compile appDependencies.multiDex
+
+    compile appDependencies.lifecycleRuntime
+    compile appDependencies.lifecycleExtensions
+    annotationProcessor appDependencies.lifecycleCompiler
+
+    compile appDependencies.rxJava
+    compile appDependencies.rxAndroid
+
+    compile appDependencies.retrofit
+    compile appDependencies.retrofitGsonConverter
+    compile appDependencies.retrofitAdapter
+    compile appDependencies.okHttp
+    compile appDependencies.gson
+
+    compile appDependencies.dagger
+    compile appDependencies.daggerAndroid
+    compile appDependencies.daggerAndroidSupport
+    annotationProcessor appDependencies.daggerCompiler
+    annotationProcessor appDependencies.daggerAndroidProcessor
+    provided appDependencies.javaxAnnotation
+    compile appDependencies.javaxInject
+
+
+    compile appDependencies.glide
+    annotationProcessor appDependencies.glideAnnotationProcessor
+
+    compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
+
+    testImplementation testDependencies.junit
+    androidTestImplementation 'com.android.support.test:runner:1.0.0'
+    androidTestImplementation testDependencies.espresso
+    testCompile testDependencies.mockito
+    testCompile testDependencies.powerMockito
+    testCompile testDependencies.powerMockJunit
+    testCompile testDependencies.powerMockitoCore
+    testCompile testDependencies.powerMockitoJunitRule
+}
