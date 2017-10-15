@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     packagingOptions {
@@ -14,8 +15,7 @@ android {
         targetSdkVersion rootProject.ext.androidTargetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BLOCKCHAIN_KEY", "\"API_KEY\"")
+        testInstrumentationRunner "com.ckunder.blockchain.view.CustomTestRunner"
         multiDexEnabled true
 
     }
@@ -52,40 +52,56 @@ dependencies {
     compile appDependencies.recyclerView
     implementation appDependencies.constraintLayout
     compile appDependencies.multiDex
+    kapt appDependencies.databindingCompiler
 
+    //Arch components
     compile appDependencies.lifecycleRuntime
     compile appDependencies.lifecycleExtensions
-    annotationProcessor appDependencies.lifecycleCompiler
+    compile appDependencies.roomDB
+    kapt appDependencies.lifecycleCompiler
+    kapt appDependencies.roomDBCompiler
 
-    compile appDependencies.rxJava
+    //RxJava2
+    compile appDependencies.rxJava2
     compile appDependencies.rxAndroid
+    compile appDependencies.rxjava2Adapter
 
+    //Retrofit
     compile appDependencies.retrofit
     compile appDependencies.retrofitGsonConverter
     compile appDependencies.retrofitAdapter
     compile appDependencies.okHttp
     compile appDependencies.gson
 
+    //Dagger
     compile appDependencies.dagger
     compile appDependencies.daggerAndroid
     compile appDependencies.daggerAndroidSupport
-    annotationProcessor appDependencies.daggerCompiler
-    annotationProcessor appDependencies.daggerAndroidProcessor
+    kapt appDependencies.daggerCompiler
+    kapt appDependencies.daggerAndroidProcessor
     provided appDependencies.javaxAnnotation
     compile appDependencies.javaxInject
 
+    compile appDependencies.hellocharts
 
-    compile appDependencies.glide
-    annotationProcessor appDependencies.glideAnnotationProcessor
-
-    compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
-
+    //Testing
     testImplementation testDependencies.junit
-    androidTestImplementation 'com.android.support.test:runner:1.0.0'
+    androidTestImplementation testDependencies.testRunner
     androidTestImplementation testDependencies.espresso
     testCompile testDependencies.mockito
     testCompile testDependencies.powerMockito
     testCompile testDependencies.powerMockJunit
     testCompile testDependencies.powerMockitoCore
     testCompile testDependencies.powerMockitoJunitRule
+    testCompile testDependencies.mockserver
+    androidTestImplementation testDependencies.archCoreTesting
+    androidTestCompile testDependencies.mockitoAndroid
+    androidTestCompile(testDependencies.multidexInstrumentation) {
+        exclude group: 'com.android.support', module: 'multidex'
+    }
+}
+
+task copyTestClasses(type: Copy) {
+    from "build/tmp/kotlin-classes/debugUnitTest"
+    into "build/intermediates/classes/debug"
 }
